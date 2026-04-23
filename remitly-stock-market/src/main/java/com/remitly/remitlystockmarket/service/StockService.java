@@ -51,8 +51,39 @@ public class StockService {
         walletRepo.save(wallet);
 
         // 6. Log successful operation
+        logAction("buy",walletId,stockName);
+    }
+
+    @Transactional
+    public void sellStock(String walletId, String stockName) {
+        // 1. Check if wallet exists
+        Wallet wallet = walletRepo.findById(walletId)
+                .orElseThrow(() -> new RuntimeException("Wallet doesn't exist"));
+
+        // 2. Check if the user actually has this stock
+        Long currentQuantity = wallet.getStocks().getOrDefault(stockName, 0L);
+        if (currentQuantity <= 0) {
+            throw new RuntimeException("No stocks in wallet to sell");
+        }
+
+        // 3. Fetch bank stock
+        BankStock stock = bankRepo.findById(stockName)
+                .orElseThrow(() -> new RuntimeException("Stock not found"));
+
+        // 4. Update wallet: remove one stock
+        wallet.getStocks().put(stockName, currentQuantity - 1);
+        walletRepo.save(wallet);
+
+        // 5. Update bank inventory: add one stock back to bank
+        stock.setQuantity(stock.getQuantity() + 1);
+        bankRepo.save(stock);
+
+        // 6. Log successful operation
+        logAction("sell",walletId,stockName);
+    }
+    private void logAction(String type, String walletId, String stockName){
         AuditLog log = new AuditLog();
-        log.setType("buy");
+        log.setType(type);
         log.setWalletId(walletId);
         log.setStockName(stockName);
         log.setTimestamp(LocalDateTime.now());
