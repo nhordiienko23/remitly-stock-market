@@ -1,5 +1,7 @@
 package com.remitly.remitlystockmarket.controller;
 
+import com.remitly.remitlystockmarket.model.BankStock;
+import com.remitly.remitlystockmarket.repository.BankStockRepository;
 import com.remitly.remitlystockmarket.service.StockService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +12,22 @@ import java.util.Map;
 public class StockController {
 
     private final StockService stockService;
+    private final BankStockRepository bankRepo;
 
-    public StockController(StockService stockService) {
+    public StockController(StockService stockService, BankStockRepository bankRepo) {
         this.stockService = stockService;
+        this.bankRepo = bankRepo;
+
+    }
+
+    // GET /stocks
+    @GetMapping("/stocks")
+    public ResponseEntity<Map<String, Object>> getBankStocks() {
+        // Мы возвращаем список всех акций банка
+        // Пока просто заглушка, чтобы проверить, что 404 пропал
+        Map<String, Object> response = new java.util.HashMap<>();
+        response.put("stocks", bankRepo.findAll());
+        return ResponseEntity.ok(response);
     }
 
     // POST /wallets/{wallet_id}/stocks/{stock_name}
