@@ -6,6 +6,7 @@ import com.remitly.remitlystockmarket.service.StockService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,7 +20,19 @@ public class StockController {
         this.bankRepo = bankRepo;
 
     }
+    // DTO class to parse the JSON request
+    public static class StockRequest {
+        public List<BankStock> stocks;
+    }
 
+    @PostMapping("/stocks")
+    public ResponseEntity<String> setBankStocks(@RequestBody StockRequest request) {
+        if (request.stocks == null) {
+            return ResponseEntity.badRequest().body("Stocks list cannot be empty");
+        }
+        stockService.setBankStocks(request.stocks);
+        return ResponseEntity.ok("Bank stocks updated successfully");
+    }
     // GET /stocks
     @GetMapping("/stocks")
     public ResponseEntity<Map<String, Object>> getBankStocks() {
@@ -29,7 +42,7 @@ public class StockController {
         response.put("stocks", bankRepo.findAll());
         return ResponseEntity.ok(response);
     }
-
+  
     // POST /wallets/{wallet_id}/stocks/{stock_name}
     @PostMapping("/wallets/{walletId}/stocks/{stockName}")
     public ResponseEntity<String> handleStockOperation(

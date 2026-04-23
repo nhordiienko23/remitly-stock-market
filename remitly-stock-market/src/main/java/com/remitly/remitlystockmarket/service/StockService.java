@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class StockService {
@@ -23,6 +24,15 @@ public class StockService {
         this.logRepo = logRepo;
     }
 
+
+
+    @Transactional
+    public void setBankStocks(List<BankStock> stocks) {
+        // Clear existing bank stocks or update them.
+        // Here we overwrite the bank state with the provided list.
+        bankRepo.deleteAll();
+        bankRepo.saveAll(stocks);
+    }
     @Transactional
     public void buyStock(String walletId, String stockName) {
         // 1. Fetch bank stock or throw exception if it doesn't exist
