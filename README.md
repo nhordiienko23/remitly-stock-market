@@ -3,25 +3,27 @@
 A simplified, high-availability stock market simulation engine developed as a RESTful service.
 
 ## Architecture & Features
+
 - **High Availability**: The system is deployed with two application instances behind an Nginx load balancer to ensure service continuity.
 - **Resilience**: Supports a "Chaos" endpoint that simulates instance failure; the system remains operational via the load balancer.
 - **Persistence**: Uses PostgreSQL as the underlying database, orchestrated via Docker.
 - **Auditability**: Tracks all successful buy/sell operations in an audit log.
 
 ## Prerequisites
+
 - [Docker](https://www.docker.com/) (with Docker Compose)
 - [Java 21](https://adoptium.net/) (for local builds)
 - [Maven](https://maven.apache.org/)
 
 ## Quick Start
+
 1. **Build the project**:
    ```bash
    mvn clean package
-Launch the infrastructure:
+   Launch the infrastructure:
 
 Bash
 docker-compose up --build
-
 The API will be available at: http://localhost:8080
 
 API Endpoints
@@ -42,9 +44,6 @@ POST /chaos - Simulates a service failure by terminating the instance.
 Engineering Practices
 Transactions: All critical operations (buying/selling) are annotated with @Transactional to ensure data consistency.
 
-Dependency Injection: Spring Boot's IoC container is used for clean, testable component management.
-
-Containerization: The entire stack is containerized for cross-platform portability.
 Dependency Injection: Spring Boot's IoC container is used for clean, testable component management.
 
 Containerization: The entire stack is containerized for cross-platform portability.
