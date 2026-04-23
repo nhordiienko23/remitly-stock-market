@@ -1,29 +1,29 @@
-# Remitly Stock Market Simulator
-
+Remitly Stock Market Simulator
 A simplified, high-availability stock market simulation engine developed as a RESTful service.
 
-## Architecture & Features
+Architecture & Features
+High Availability: The system is deployed with two application instances behind an Nginx load balancer to ensure service continuity.
 
-- **High Availability**: The system is deployed with two application instances behind an Nginx load balancer to ensure service continuity.
-- **Resilience**: Supports a "Chaos" endpoint that simulates instance failure; the system remains operational via the load balancer.
-- **Persistence**: Uses PostgreSQL as the underlying database, orchestrated via Docker.
-- **Auditability**: Tracks all successful buy/sell operations in an audit log.
+Resilience: Supports a "Chaos" endpoint that simulates instance failure; the system remains operational via the load balancer.
 
-## Prerequisites
+Persistence: Uses PostgreSQL as the underlying database, orchestrated via Docker.
 
-- [Docker](https://www.docker.com/) (with Docker Compose)
-- [Java 21](https://adoptium.net/) (for local builds)
-- [Maven](https://maven.apache.org/)
+Auditability: Tracks all successful buy/sell operations in an audit log.
 
-## Quick Start
+Prerequisites
+Docker (with Docker Compose)
 
-1. **Build the project**:
-   ```bash
-   mvn clean package
-   Launch the infrastructure:
+Java 21 (for local builds)
 
-Bash
+Maven
+
+Quick Start
+Build the project:
+mvn clean package
+
+Launch the infrastructure:
 docker-compose up --build
+
 The API will be available at: http://localhost:8080
 
 API Endpoints
