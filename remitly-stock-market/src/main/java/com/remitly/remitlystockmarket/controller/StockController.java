@@ -1,7 +1,9 @@
 package com.remitly.remitlystockmarket.controller;
 
 import com.remitly.remitlystockmarket.model.BankStock;
+import com.remitly.remitlystockmarket.repository.AuditLogRepository;
 import com.remitly.remitlystockmarket.repository.BankStockRepository;
+import com.remitly.remitlystockmarket.repository.WalletRepository;
 import com.remitly.remitlystockmarket.service.StockService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +16,24 @@ public class StockController {
 
     private final StockService stockService;
     private final BankStockRepository bankRepo;
+    private final WalletRepository walletRepo;
+    private final AuditLogRepository auditLogRepo;
 
-    public StockController(StockService stockService, BankStockRepository bankRepo) {
+    public StockController(StockService stockService,
+                           BankStockRepository bankRepo,
+                           WalletRepository walletRepo,
+                           AuditLogRepository auditLogRepo) {
         this.stockService = stockService;
         this.bankRepo = bankRepo;
-
+        this.walletRepo = walletRepo;
+        this.auditLogRepo = auditLogRepo;
     }
     // DTO class to parse the JSON request
     public static class StockRequest {
         public List<BankStock> stocks;
     }
 
+    //set stocks
     @PostMapping("/stocks")
     public ResponseEntity<String> setBankStocks(@RequestBody StockRequest request) {
         if (request.stocks == null) {
@@ -36,13 +45,12 @@ public class StockController {
     // GET /stocks
     @GetMapping("/stocks")
     public ResponseEntity<Map<String, Object>> getBankStocks() {
-        // Мы возвращаем список всех акций банка
-        // Пока просто заглушка, чтобы проверить, что 404 пропал
         Map<String, Object> response = new java.util.HashMap<>();
         response.put("stocks", bankRepo.findAll());
         return ResponseEntity.ok(response);
     }
-  
+
+    //buy or sell stock
     // POST /wallets/{wallet_id}/stocks/{stock_name}
     @PostMapping("/wallets/{walletId}/stocks/{stockName}")
     public ResponseEntity<String> handleStockOperation(
@@ -69,5 +77,34 @@ public class StockController {
             }
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+    //check wallet by ID
+    // GET /wallets/{wallet_id}
+    @GetMapping("/wallets/{walletId}")
+    public ResponseEntity<?> getWallet(@PathVariable String walletId) {
+        return walletRepo.findById(walletId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // GET /wallets/{wallet_id}/stocks/{stock_name}
+    @GetMapping("/wallets/{walletId}/stocks/{stockName}")
+    public ResponseEntity<Long> getStockQuantity(@PathVariable String walletId, @PathVariable String stockName) {
+        return walletRepo.findById(walletId)
+                .map(w -> ResponseEntity.ok(w.getStocks().getOrDefault(stockName, 0L)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // GET /log
+    @GetMapping("/log")
+    public ResponseEntity<Map<String, Object>> getLogs() {
+        Map<String, Object> response = new java.util.HashMap<>();
+        response.put("log", auditLogRepo.findAllByOrderByTimestampAsc());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/chaos")
+    public void chaos() {
+        System.exit(1); // Forcefully kills the JVM instance
     }
 }

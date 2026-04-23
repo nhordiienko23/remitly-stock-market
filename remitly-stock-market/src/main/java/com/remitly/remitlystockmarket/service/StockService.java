@@ -25,7 +25,6 @@ public class StockService {
     }
 
 
-
     @Transactional
     public void setBankStocks(List<BankStock> stocks) {
         // Clear existing bank stocks or update them.
