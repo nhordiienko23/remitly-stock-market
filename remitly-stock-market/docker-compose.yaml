@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres:15
+    container_name: stock_db
+    # Команда отключает проверку временных зон
+    command: ["postgres", "-c", "log_timezone=UTC", "-c", "TimeZone=UTC"]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: stock_market
+    ports:
+      - "5433:5432"
