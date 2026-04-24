@@ -1,12 +1,33 @@
+version: '3.8'
 services:
   db:
     image: postgres:15
-    container_name: stock_db
-    # Команда отключает проверку временных зон
-    command: ["postgres", "-c", "log_timezone=UTC", "-c", "TimeZone=UTC"]
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
       POSTGRES_DB: stock_market
+      POSTGRES_PASSWORD: password
     ports:
       - "5433:5432"
+
+  app1:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stock_market
+
+  app2:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stock_market
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app1
+      - app2

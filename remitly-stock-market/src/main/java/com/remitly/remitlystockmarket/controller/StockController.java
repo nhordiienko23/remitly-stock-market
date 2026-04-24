@@ -28,6 +28,7 @@ public class StockController {
         this.walletRepo = walletRepo;
         this.auditLogRepo = auditLogRepo;
     }
+
     // DTO class to parse the JSON request
     public static class StockRequest {
         public List<BankStock> stocks;
@@ -42,6 +43,7 @@ public class StockController {
         stockService.setBankStocks(request.stocks);
         return ResponseEntity.ok("Bank stocks updated successfully");
     }
+
     // GET /stocks
     @GetMapping("/stocks")
     public ResponseEntity<Map<String, Object>> getBankStocks() {
@@ -78,6 +80,7 @@ public class StockController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     //check wallet by ID
     // GET /wallets/{wallet_id}
     @GetMapping("/wallets/{walletId}")

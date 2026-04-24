@@ -8,8 +8,6 @@ import java.util.Map;
 
 @Entity
 @Table(name = "wallets")
-@Getter
-@Setter
 public class Wallet {
     @Id
     private String walletId; // Unique identifier for the wallet
@@ -20,4 +18,21 @@ public class Wallet {
     @MapKeyColumn(name = "stock_name")
     @Column(name = "quantity")
     private Map<String, Long> stocks = new HashMap<>();
+
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(String walletId) {
+        this.walletId = walletId;
+    }
+
+    public Map<String, Long> getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(Map<String, Long> stocks) {
+        this.stocks = stocks;
+    }
 }

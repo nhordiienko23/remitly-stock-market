@@ -6,10 +6,25 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "bank_stocks")
-@Getter
-@Setter
+
 public class BankStock {
     @Id
     private String stockName;
     private Long quantity;
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getStockName() {
+        return stockName;
+    }
+
+    public void setStockName(String stockName) {
+        this.stockName = stockName;
+    }
 }
