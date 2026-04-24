@@ -25,6 +25,8 @@ A simplified, high-availability stock market simulation engine developed as a RE
 
 3. The API will be available at: http://localhost:8080
 
+Note: During the first launch, Docker will download necessary images and initialize the PostgreSQL database. This may take 1-2 minutes.
+
 ## API Endpoints
 
 * **POST /stocks** - Set the bank's stock inventory.
